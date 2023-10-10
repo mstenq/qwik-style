@@ -6,7 +6,7 @@ import {
   Slot,
   component$,
 } from "@builder.io/qwik";
-import { SxButton } from "../base/SxButton";
+import { SxButton } from "../base-component/SxButton";
 import { dispatchCloseEvent } from "@/utils/dispatchCloseEvent";
 
 export const CloseButton = component$(
