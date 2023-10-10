@@ -12,7 +12,7 @@ import {
   useSignal,
   useVisibleTask$,
 } from "@builder.io/qwik";
-import { SyncSignal } from "../SyncSignal";
+import { SyncSignal } from "../sync-signal";
 import { TooltipProps } from "./Tooltip.type";
 
 export const Tooltip = component$(

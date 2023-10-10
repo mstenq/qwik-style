@@ -1,4 +1,4 @@
-import { SyncSignal } from "@/components/SyncSignal";
+import { SyncSignal } from "@/components/sync-signal";
 import { useOrCreateSignal, useSx } from "@/hooks";
 import { getValue } from "@/utils";
 import {

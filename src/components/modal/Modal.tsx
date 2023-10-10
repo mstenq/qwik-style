@@ -8,8 +8,8 @@ import {
   useTask$,
   useVisibleTask$,
 } from "@builder.io/qwik";
-import { SxDialog } from "../Base/SxDialog";
-import { SyncSignal } from "../SyncSignal";
+import { SxDialog } from "../base/SxDialog";
+import { SyncSignal } from "../sync-signal";
 import { ModalProps } from "./Modal.types";
 import { FocusTrap } from "../focus-trap/FocusTrap";
 

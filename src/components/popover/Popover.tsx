@@ -15,7 +15,7 @@ import {
   useSignal,
   useVisibleTask$,
 } from "@builder.io/qwik";
-import { SyncSignal } from "../SyncSignal";
+import { SyncSignal } from "../sync-signal";
 import { FocusTrap } from "../focus-trap/FocusTrap";
 import { PopoverProps } from "./Popover.type";
 

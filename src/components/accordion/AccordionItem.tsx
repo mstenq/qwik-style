@@ -7,7 +7,7 @@ import {
   useContextProvider,
   useId,
 } from "@builder.io/qwik";
-import { SxDiv } from "../Base/SxDiv";
+import { SxDiv } from "../base/SxDiv";
 import { AccordionItemContext, AccordionItemProps } from "./Accordion.type";
 import {
   accordionItemContextId,
