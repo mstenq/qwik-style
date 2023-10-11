@@ -6,12 +6,13 @@ import {
   useOrCreateSignal,
   useSlotChild,
 } from "@/hooks";
-import { useClickAway } from "@/hooks/useClickAway";
+import { useClickAway, useAutoAnimate } from "@/hooks";
 import { getValue, isMouseInBounds } from "@/utils";
 import {
   $,
   Slot,
   component$,
+  noSerialize,
   useSignal,
   useVisibleTask$,
 } from "@builder.io/qwik";
@@ -22,8 +23,8 @@ import { PopoverProps } from "./Popover.type";
 export const Popover = component$(
   ({
     open: openProp,
-    triggerType = "click",
     onOpenChange$,
+    componentName,
     placement,
     offSetOptions,
     flipOptions,
@@ -37,11 +38,14 @@ export const Popover = component$(
   }: PopoverProps) => {
     const triggerParentRef = useSignal<HTMLElement>();
     const triggerRef = useSlotChild(triggerParentRef);
+    // const animationParentRef = useSignal<HTMLElement>();
     const dialogRef = useSignal<HTMLDivElement>();
-    const dialogDisplay = useSignal("none");
-    const timerId = useSignal<number | null>(null);
     const arrowRef = useSignal<HTMLDivElement>();
     const open = useOrCreateSignal(openProp, false);
+    const [animationParentRef] = useAutoAnimate({
+      duration: 180,
+      easing: "cubic-bezier(0.1, -0.6, 0.2, 0)",
+    });
     const position = useFloatingUI({
       enabled: open,
       triggerRef,
@@ -62,49 +66,6 @@ export const Popover = component$(
       open.value = !open.value;
     });
 
-    const debounceOutOfBounds = $((isOutOfBounds: boolean) => {
-      // Timer hasn't run yet, but we are in bounds, clear timer
-      if (!isOutOfBounds && timerId.value) {
-        clearTimeout(timerId.value);
-        timerId.value = null;
-      }
-
-      if (isOutOfBounds && !timerId.value) {
-        timerId.value = Number(
-          setTimeout(
-            $(() => {
-              open.value = false;
-            }),
-            1000
-          )
-        );
-      }
-    });
-
-    // Track mouse movements to determine if popover should be closed
-    const handleMouseOver = $(async (e: MouseEvent) => {
-      if (!triggerRef.value) return;
-      if (!dialogRef.value) return;
-      const isOutOfBounds =
-        !isMouseInBounds(e, triggerRef.value) &&
-        !isMouseInBounds(e, dialogRef.value);
-      debounceOutOfBounds(isOutOfBounds);
-    });
-
-    // Don't init mouseover listener unless opened
-    const setOpenViaHover = $(async () => {
-      open.value = true;
-      window.addEventListener("mouseover", handleMouseOver);
-    });
-
-    // Have to use a task here to remove listener to prevent circular refs
-    useVisibleTask$(({ track }) => {
-      const isOpen = track(() => open.value);
-      if (!isOpen && triggerType === "hover") {
-        window.removeEventListener("mouseover", handleMouseOver);
-      }
-    });
-
     // Sync open state with consumer if callback provided
     useVisibleTask$(({ track }) => {
       const isOpen = track(() => open.value);
@@ -116,20 +77,10 @@ export const Popover = component$(
     useVisibleTask$(async ({ track, cleanup }) => {
       const triggerEl = track(() => triggerRef.value);
       if (!triggerEl) return;
-
-      if (triggerType === "click") {
-        triggerEl.addEventListener("click", toggleOpen);
-        cleanup(() => {
-          triggerEl.removeEventListener("click", toggleOpen);
-        });
-      }
-
-      if (triggerType === "hover") {
-        triggerEl.addEventListener("mouseenter", setOpenViaHover);
-        cleanup(() => {
-          triggerEl.removeEventListener("mouseenter", setOpenViaHover);
-        });
-      }
+      triggerEl.addEventListener("click", toggleOpen);
+      cleanup(() => {
+        triggerEl.removeEventListener("click", toggleOpen);
+      });
     });
 
     useClickAway(
@@ -147,28 +98,6 @@ export const Popover = component$(
       }
     );
 
-    const handleAnimationChange = $(() => {
-      if (!dialogRef.value) return;
-      // Delay hiding popover, giving time to animate
-      if (!open.value) {
-        // dumb hack to prevent flickering
-        dialogRef.value.style.display = "none";
-        dialogDisplay.value = "none";
-      }
-    });
-
-    useAddEventListener(dialogRef, "animationend", handleAnimationChange);
-
-    useVisibleTask$(({ track }) => {
-      const isOpen = track(() => open.value);
-      if (isOpen) {
-        dialogDisplay.value = "block";
-      }
-      if (!isOpen && triggerType === "hover") {
-        window.removeEventListener("mouseover", handleMouseOver);
-      }
-    });
-
     useAddEventListener(
       dialogRef,
       CustomEvent.Close,
@@ -176,6 +105,18 @@ export const Popover = component$(
         open.value = false;
       })
     );
+
+    // useVisibleTask$(
+    //   ({ track }) => {
+    //     const parentEl = track(() => animationParentRef.value);
+    //     if (!parentEl) return;
+    //     autoAnimate(parentEl, {
+    //       duration: 200,
+    //       easing: "cubic-bezier(0.1, -0.6, 0.2, 0)",
+    //     });
+    //   },
+    //   { strategy: "document-ready" }
+    // );
 
     return (
       <div style={{ position: "relative" }}>
@@ -185,27 +126,31 @@ export const Popover = component$(
         </span>
 
         <FocusTrap>
-          <div
-            ref={dialogRef}
-            data-state={open.value ? "open" : "closed"}
-            onAnimationEnd$={handleAnimationChange}
-            style={{
-              position: "absolute",
-              display: dialogDisplay.value,
-              left: `${position.value.x}px`,
-              top: `${position.value.y}px`,
-            }}
-            class={["Popover", getValue(props.class)]}
-          >
-            <Slot />
-            {arrowOptions !== false && (
+          <div ref={animationParentRef}>
+            {open.value && (
               <div
-                ref={arrowRef}
+                ref={dialogRef}
+                data-state={open.value ? "open" : "closed"}
                 style={{
                   position: "absolute",
+                  left: `${position.value.x}px`,
+                  top: `${position.value.y}px`,
                 }}
-                class="PopoverArrow"
-              ></div>
+                class={[componentName ?? "Popover", getValue(props.class)]}
+              >
+                <Slot />
+                {arrowOptions !== false && (
+                  <div
+                    ref={arrowRef}
+                    style={{
+                      position: "absolute",
+                    }}
+                    class={
+                      componentName ? `${componentName}Arrow` : "PopoverArrow"
+                    }
+                  ></div>
+                )}
+              </div>
             )}
           </div>
         </FocusTrap>

@@ -10,6 +10,25 @@ import { Popover } from "../popover/Popover";
 import { Tooltip } from "../tooltip/Tooltip";
 
 export const Playground = component$(() => {
+  return (
+    <div class="container mx-auto py-72 m-0">
+      <Select>
+        <SelectGroup label="Group">
+          <SelectOption>Option 1</SelectOption>
+          <SelectOption>Option 2</SelectOption>
+          <SelectOption>Option 3</SelectOption>
+        </SelectGroup>
+      </Select>
+
+      <Popover placement="bottom">
+        <Button q:slot="trigger">Hello</Button>
+        <div class="relative">Test</div>
+      </Popover>
+    </div>
+  );
+});
+
+export const Playground4 = component$(() => {
   const open = useSignal(false);
   return (
     <div class="mx-auto container py-72">
@@ -58,7 +77,6 @@ export const Playground2 = component$(() => {
       aperiam voluptas quia quae fugiat
       <Popover
         placement="right"
-        triggerType="click"
         onOpenChange$={(val: boolean) => console.log("trigger", val)}
       >
         <Button q:slot="trigger">Hello</Button>
@@ -98,6 +116,9 @@ import { Test } from "@/components/Test";
 import { Modal } from "../modal/Modal";
 import { CloseButton } from "../close-button/CloseButton";
 import { dispatchCloseEvent } from "@/utils/dispatchCloseEvent";
+import { Select } from "../select/Select";
+import { SelectGroup } from "../select/SelectGroup";
+import { SelectOption } from "../select/SelectOption";
 
 export type BoxProps = VariantProps<typeof box>;
 export const box = cva(["box", "box-border"], {

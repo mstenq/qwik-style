@@ -12,6 +12,7 @@ export const SxDialog = component$(({ label, classKey, ...props }: Props) => {
   delete clonedProps[classKey];
   return (
     <dialog
+      //@ts-ignore - not typed correctly
       preventdefault:cancel
       {...clonedProps}
       class={[label, classes.value]}

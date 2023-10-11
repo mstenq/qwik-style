@@ -31,12 +31,8 @@
 
 /*Popover*/
 .Popover {
-  @apply bg-white shadow-lg relative rounded p-4  data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out border border-gray-100;
+  @apply bg-white shadow-lg relative rounded p-4  border border-gray-100;
 }
-.PopoverClose {
-  @apply rounded-full bg-gray-100 hover:bg-gray-300 w-6 h-6 flex items-center justify-center cursor-pointer;
-}
-
 .PopoverArrow {
   @apply w-4 h-4 bg-white transform rotate-45;
 }

@@ -26,7 +26,7 @@ import {
 
 export type FloatingUIOptions = {
   placement?: MaybeSignal<Placement>;
-  offSetOptions?: NoSerialize<OffsetOptions> | false;
+  offSetOptions?: number | NoSerialize<OffsetOptions> | false;
   flipOptions?: NoSerialize<FlipOptions> | false;
   shiftOptions?: NoSerialize<ShiftOptions> | false;
   sizeOptions?: NoSerialize<SizeOptions> | false;

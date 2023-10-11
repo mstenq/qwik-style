@@ -10,8 +10,8 @@ import {
 } from "@builder.io/qwik";
 
 export type PopoverProps = {
-  triggerType?: "click" | "hover";
   open?: MaybeSignal<boolean>;
   onOpenChange$?: PropFunction<(open: boolean) => unknown>;
+  componentName?: string;
 } & FloatingUIOptions &
   QwikIntrinsicElements["div"];
