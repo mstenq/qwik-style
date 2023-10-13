@@ -8,8 +8,6 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik";
 
-import { isBrowser } from "@builder.io/qwik/build";
-
 import autoAnimate, {
   AnimationController,
   AutoAnimateOptions,
@@ -22,7 +20,7 @@ import autoAnimate, {
  * @returns
  */
 export function useAutoAnimate<T extends HTMLElement>(
-  options?: Partial<AutoAnimateOptions> | AutoAnimationPlugin
+  options?: Partial<AutoAnimateOptions>
 ): [
   Signal<T | undefined>,
   QRL<(enabled: boolean | ((isEnabled: boolean) => boolean)) => void>,
@@ -30,12 +28,15 @@ export function useAutoAnimate<T extends HTMLElement>(
   const parentRef = useSignal<T>();
   const controller = useSignal<NoSerialize<AnimationController | undefined>>();
 
-  useVisibleTask$(({ track }) => {
-    const element = track(() => parentRef.value);
-    if (element && isBrowser) {
-      controller.value = noSerialize(autoAnimate(element, options));
-    }
-  });
+  useVisibleTask$(
+    ({ track }) => {
+      const element = track(() => parentRef.value);
+      if (element) {
+        controller.value = noSerialize(autoAnimate(element, options));
+      }
+    },
+    { strategy: "document-ready" }
+  );
 
   const setEnabled = $(
     (enabled: boolean | ((isEnabled: boolean) => boolean)) => {

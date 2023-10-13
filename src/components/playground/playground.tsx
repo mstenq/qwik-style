@@ -12,11 +12,19 @@ import { Tooltip } from "../tooltip/Tooltip";
 export const Playground = component$(() => {
   return (
     <div class="container mx-auto py-72 m-0">
-      <Select>
+      <button>Skip Conten</button>
+      <Select placeholder="Select Option...">
         <SelectGroup label="Group">
-          <SelectOption>Option 1</SelectOption>
-          <SelectOption>Option 2</SelectOption>
-          <SelectOption>Option 3</SelectOption>
+          <SelectOption value="option 1">Option 1</SelectOption>
+          <SelectOption value="option 2">
+            <div class="text-red-700">Option 2</div>
+          </SelectOption>
+          <SelectOption value="option 3">Option 3</SelectOption>
+        </SelectGroup>
+        <SelectGroup label="Group 2">
+          <SelectOption value="option 4">Option 4</SelectOption>
+          <SelectOption value="option 5">Option 5</SelectOption>
+          <SelectOption value="option 6">Option 6</SelectOption>
         </SelectGroup>
       </Select>
 

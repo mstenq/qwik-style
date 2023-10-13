@@ -47,7 +47,15 @@
 }
 
 /* Modal */
-
 .Modal {
   @apply bg-white rounded-lg shadow-lg p-4 backdrop:bg-white/20 backdrop:backdrop-blur data-[state=open]:animate-fade-in data-[state=closed]:animate-fade-out;
+}
+
+/* Select */
+.SelectInput {
+  @apply flex h-9 w-full items-center justify-between rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-blue-600 placeholder:text-gray-400 focus:outline-none focus-visible:ring disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.SelectPopover {
+  @apply z-10 rounded-md border bg-white shadow-md;
 }

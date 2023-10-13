@@ -3,8 +3,8 @@ import { SelectGroupProps } from "./Select.types";
 
 export const SelectGroup = component$(({ label }: SelectGroupProps) => {
   return (
-    <div>
-      <div class="font-bold">{label}</div>
+    <div class={["SelectGroup"]}>
+      <div class={["SelectGroupLabel", "font-bold"]}>{label}</div>
       <Slot />
     </div>
   );

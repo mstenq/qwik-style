@@ -34,6 +34,9 @@ export const Popover = component$(
     inlineOptions,
     arrowOptions,
     hideOptions,
+    focusFirst,
+    arrowNavigation,
+    ref,
     ...props
   }: PopoverProps) => {
     const triggerParentRef = useSignal<HTMLElement>();
@@ -43,8 +46,8 @@ export const Popover = component$(
     const arrowRef = useSignal<HTMLDivElement>();
     const open = useOrCreateSignal(openProp, false);
     const [animationParentRef] = useAutoAnimate({
-      duration: 180,
-      easing: "cubic-bezier(0.1, -0.6, 0.2, 0)",
+      duration: 200,
+      easing: "ease-in-out",
     });
     const position = useFloatingUI({
       enabled: open,
@@ -85,8 +88,7 @@ export const Popover = component$(
 
     useClickAway(
       $(() => (open.value = false)),
-      dialogRef,
-      triggerRef
+      { elementRefs: [dialogRef, triggerRef], enabled: open }
     );
 
     // Wire up escape key
@@ -106,26 +108,18 @@ export const Popover = component$(
       })
     );
 
-    // useVisibleTask$(
-    //   ({ track }) => {
-    //     const parentEl = track(() => animationParentRef.value);
-    //     if (!parentEl) return;
-    //     autoAnimate(parentEl, {
-    //       duration: 200,
-    //       easing: "cubic-bezier(0.1, -0.6, 0.2, 0)",
-    //     });
-    //   },
-    //   { strategy: "document-ready" }
-    // );
-
     return (
-      <div style={{ position: "relative" }}>
+      <div ref={ref} style={{ position: "relative" }}>
         <SyncSignal from={openProp} to={open} />
         <span ref={triggerParentRef}>
           <Slot name="trigger" />
         </span>
 
-        <FocusTrap>
+        <FocusTrap
+          enabled={open}
+          focusFirst={focusFirst}
+          arrowNavigation={arrowNavigation}
+        >
           <div ref={animationParentRef}>
             {open.value && (
               <div
