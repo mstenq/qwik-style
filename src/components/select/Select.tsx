@@ -6,6 +6,7 @@ import {
   component$,
   useContextProvider,
   useSignal,
+  useTask$,
   useVisibleTask$,
 } from "@builder.io/qwik";
 import { Popover } from "../popover/Popover";
@@ -25,6 +26,11 @@ export const Select = component$((props: SelectProps) => {
     open,
     value,
     renderValue,
+  });
+
+  useTask$(({ track }) => {
+    const val = track(() => value.value);
+    props?.onChange$?.(val);
   });
 
   useVisibleTask$(({ track }) => {
@@ -57,7 +63,7 @@ export const Select = component$((props: SelectProps) => {
         componentName="SelectPopover"
         placement="bottom"
         arrowOptions={false}
-        offSetOptions={0}
+        offSetOptions={5}
         arrowNavigation="vertical"
         focusFirst={shouldFocusFirst.value}
         class={getValue(props.classDropdown)}

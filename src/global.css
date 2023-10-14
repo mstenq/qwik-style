@@ -53,9 +53,43 @@
 
 /* Select */
 .SelectInput {
-  @apply flex h-9 w-full items-center justify-between rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-blue-600 placeholder:text-gray-400 focus:outline-none focus-visible:ring disabled:cursor-not-allowed disabled:opacity-50;
+  @apply flex h-9 w-full items-center justify-between rounded-md border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-blue-600 placeholder:text-gray-400 focus:outline-none focus-visible:ring disabled:cursor-not-allowed disabled:opacity-50  after:content-[url('icons/chevron-up-down.svg')] after:w-4 after:mt-1;
 }
 
 .SelectPopover {
-  @apply z-10 rounded-md border bg-white shadow-md;
+  @apply z-10 w-full rounded-md border bg-white shadow-md;
+}
+
+.SelectGroup {
+  @apply p-1;
+}
+
+.SelectGroupLabel {
+  @apply px-3 text-sm py-1;
+}
+
+.SelectOption {
+  @apply block w-full rounded text-left hover:bg-gray-100 focus-visible:outline-none focus:bg-gray-100 focus-visible:ring px-3 py-2 text-sm;
+}
+
+/* Calendar */
+
+.CalendarRoot {
+  @apply w-fit;
+}
+
+.CalendarHeader {
+  @apply flex justify-between gap-4;
+}
+
+.CalendarGrid {
+  @apply grid grid-cols-7;
+}
+
+.CalendarGridHeader {
+  @apply text-center font-bold;
+}
+
+.CalendarGridCell {
+  @apply rounded-full text-center w-8 h-8 hover:bg-gray-100 data-[month=not-current]:text-gray-400 data-[today]:bg-blue-100 data-[today]:text-blue-700 data-[selected]:bg-blue-500 data-[selected]:text-white;
 }

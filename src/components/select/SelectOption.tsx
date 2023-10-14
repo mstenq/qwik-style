@@ -21,17 +21,20 @@ export const SelectOption = component$((props: SelectOptionProps) => {
     renderValue.value = buttonRef.value?.innerHTML;
   });
 
-  useVisibleTask$(({ track }) => {
-    const buttonEl = track(() => buttonRef.value);
-    if (value.value === props.value) {
-      renderValue.value = buttonEl?.innerHTML;
-    }
-  });
+  useVisibleTask$(
+    ({ track }) => {
+      const buttonEl = track(() => buttonRef.value);
+      if (value.value === props.value) {
+        renderValue.value = buttonEl?.innerHTML;
+      }
+    },
+    { strategy: "document-ready" }
+  );
 
   return (
     <button
       ref={buttonRef}
-      class="block w-full focus:bg-green-100"
+      class={["SelectOption"]}
       onClick$={handleClick}
       data-value={props.value}
     >

@@ -10,10 +10,17 @@ import { Popover } from "../popover/Popover";
 import { Tooltip } from "../tooltip/Tooltip";
 
 export const Playground = component$(() => {
+  const v = useSignal("option 6");
+  const state = useStore({ value: "option 2" });
   return (
     <div class="container mx-auto py-72 m-0">
-      <button>Skip Conten</button>
-      <Select placeholder="Select Option...">
+      <Calendar startDate={new Date("2023-09-22")} />
+      <div>value: {state.value}</div>
+      <Select
+        value={state.value}
+        onChange$={(v) => (state.value = v)}
+        placeholder="Select Option..."
+      >
         <SelectGroup label="Group">
           <SelectOption value="option 1">Option 1</SelectOption>
           <SelectOption value="option 2">
@@ -127,6 +134,7 @@ import { dispatchCloseEvent } from "@/utils/dispatchCloseEvent";
 import { Select } from "../select/Select";
 import { SelectGroup } from "../select/SelectGroup";
 import { SelectOption } from "../select/SelectOption";
+import { Calendar } from "../calendar/Calendar";
 
 export type BoxProps = VariantProps<typeof box>;
 export const box = cva(["box", "box-border"], {
